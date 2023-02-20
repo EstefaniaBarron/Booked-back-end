@@ -3,6 +3,8 @@ import sqlite3
 sqliteConnection = sqlite3.connect('db.sqlite3')
 cursor = sqliteConnection.cursor()
 
+#the table in db is booked_boook
+
 def parseOutput(file):
     """
     @todo: 
