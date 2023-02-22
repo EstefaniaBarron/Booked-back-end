@@ -28,9 +28,7 @@ driver.implicitly_wait(5)
 def get_details(listing):
     link = listing.find_element(
         By.CSS_SELECTOR, "a[class='searchresults-product-link__link']").get_attribute('href')
-    #title= listing.find_element(By.CSS_SELECTOR, "p[class='searchresults-details__p searchresults-product-title__p--grid']")
-    #author = listing.find_element(By.CSS_SELECTOR, "p[class='searchresults-details__p searchresults-product-originator__p']")
-    #price= listing.find_element(By.CSS_SELECTOR, "p[class='searchresults-details__p searchresults-product-originator__p']")
+
     all_details = listing.find_elements(By.TAG_NAME, "p")
     return {
         "title": all_details[0].get_attribute('innerHTML'),
