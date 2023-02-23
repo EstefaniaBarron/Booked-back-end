@@ -52,7 +52,7 @@ def scrape_prince_books(book):
         if av == ' On Our Shelves Now':
             data.append(get_details(listing))
  
-    with open('outputfile', 'w') as fout:
+    with open('outputfile.txt', 'w') as fout:
         json.dump(data, fout)       
     #return data
 

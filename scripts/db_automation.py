@@ -1,14 +1,104 @@
 import sqlite3
+import os
 
-sqliteConnection = sqlite3.connect('db.sqlite3')
+sqliteConnection = sqlite3.connect('test.sqlite3')
 cursor = sqliteConnection.cursor()
+from itertools import chain
 
-#the table in db is booked_boook
 
-def parseOutput(file):
+
+def parseBookObj(outputfile):
+    f=open(outputfile,'r')
+    file_lst=f.read()
+    charCount=0
+
+    for letter in file_lst:
+        charCount+=1
+        
+        #the char num to index out book objs
+        if letter =='{':
+            bookFlagStart.append(charCount)
+            
+        if letter =='}':
+            bookFlagEnd.append(charCount)
+        
+    return bookFlagStart,bookFlagEnd,file_lst
+
+          
+def addBookObj(bookFlagStart,bookFileEnd,file_lst):
+    
+    numBooks=int(len(bookFlagStart)/2)
+    
+    books=[]
+    for i in range(0,numBooks):
+        books.append(file_lst[bookFlagStart[i]:bookFlagEnd[i]-1])
+      
+    
+    book =[]
+    for i in books:
+        j = str(i)
+        #print(j)
+        book.append(j)
+        
+    #print(book)
+    
+    
+    b =[[]]
+    
+    b=[book[i::9] for i in range(9)]
+    
+    
+    
+    return b
+
+
+
+def getVals(b):
+    
+    d=[[]]
+    #numB == rows
+    numB=len(b)
+    #print(numB)
+    v=[]
+ 
+    #print(str(v).split(','))
+    #b=[b[i::9] for i in range(9)]
+    f = list(chain.from_iterable(b))
+    for i in f:
+        v+=(str(i).split(','))
+    
+
+    flag ='": '
+    c=[]
+    for i in v:
+        c+=str(i).split(flag)
+    seq=c[1::2]  
+    vals=[seq[i:i+6] for i in range(0,len(seq),6)]
+            
+    
+    #for i in vals:
+        #for j in i:
+            #print(j)
+    
+    #vals = cleaned values   
+    return vals
+    
+  
+
     """
     @todo: 
         parse output file to format for sqldb and pass into insertBook function 
+        [{"binding": "Paperback", 
+        "title": "The Great Gatsby: The Only Authorized Edition", 
+        "author": "F. Scott Fitzgerald", 
+        "price": "$17.00", 
+        "isbn": "9780743273565", 
+        "url": "https://www.prince-books.com/book/9780743273565"}, 
+        {"binding": "Hardcover", "title": "The Great Gatsby", 
+        "author": "F. Scott Fitzgerald", 
+        "price": "$12.99", 
+        "isbn": "9781509826360", 
+        "url": "https://www.prince-books.com/book/9781509826360"}]
     """
 def printSQL(cursor):
     query="select * from booked_book"
@@ -25,28 +115,87 @@ def printSQL(cursor):
    
     cursor.close()
 
-def insertBook():
-    try:
-        #values need to be unique to the book insertions 
-        sqlite_insert_query =sqlite_insert_query = """INSERT INTO booked_book
-                          (id, title, author_name, binding, price,link) 
-                           VALUES 
-                          (3,'Emma','Jane Austen','paperback',8.99,'www.test.com')"""
 
-        count = cursor.execute(sqlite_insert_query)
-        sqliteConnection.commit()
-        print("Insertion complete", cursor.rowcount)
+        
+def insert(vals):
     
+    conn = sqlite3.connect('test.sqlite3')
+    c = conn.cursor()
+    
+        
+    keys=["binding","title","author", "price", "isbn","url"]
+    
+    
+    for i in range(0,len(keys)):
+        query="ALTER TABLE b ADD "+keys[i]+" VARCHAR(100)"
+        c.execute(query) 
+        conn.commit()
+    
+    
+    
+    b=[]
+    t=[]
+    a=[]
+    p=[]
+    isbn=[]
+    u=[]
+    for i in range(len(vals)):
+        b.append(vals[i][0])
+        t.append(vals[i][1])
+        a.append(vals[i][2])
+        p.append(vals[i][3])
+        isbn.append(vals[i][4])
+        u.append(vals[i][5])
+        
+    print(b,t,a,p,isbn,u)
+    
+    for i in range(len(vals[i])):
+        c.execute("INSERT INTO b("+keys[0]+","+keys[1]+","+keys[2]+","
+                  +keys[3]+","+keys[4]+","+keys[5]+") VALUES("
+                  +b[i]+","+t[i]+","+a[i]+","+p[i]+","+isbn[i]+","+u[i]+")")
+        conn.commit() 
+    
+    
+            
+            
+        #c.execute("INSERT INTO a("+col+") VALUES("+vals[i][2]+")")
+        #conn.commit() 
+    #c.execute("INSERT INTO t(binding) VALUES("+(vals[0][0])+")")
+   
 
-    except sqlite3.Error as error:
-        print("Insertion Error:", error)
-    finally:
-        if sqliteConnection:
-            #print and close
-            printSQL(cursor)
-            print("The SQLite connection is closed")
+    
+    
+    conn.close()
+    
+        
+        
+        
+        
+                
+        
+    
+    
+"""   
+
+"""
+#main below
 
 
 
-#insertBook()
+
+#the table in db is booked_boook
+outputfile = 'scrapers/outputfile'
+file_lst=[]
+bookFlagStart=[]
+bookFlagEnd=[]
+
+bookFlagStart,bookFileEnd,file_lst=parseBookObj(outputfile)
+
+#get list of books
+#a matrix
+b=addBookObj(bookFlagStart, bookFileEnd,file_lst)
+
+vals=getVals(b)
+insert(vals)
+
 
