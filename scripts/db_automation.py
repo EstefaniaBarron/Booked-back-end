@@ -1,8 +1,7 @@
 import sqlite3
 import os
 
-sqliteConnection = sqlite3.connect('test.sqlite3')
-cursor = sqliteConnection.cursor()
+
 from itertools import chain
 
 
@@ -119,18 +118,28 @@ def printSQL(cursor):
         
 def insert(vals):
     
-    conn = sqlite3.connect('test.sqlite3')
-    c = conn.cursor()
     
-        
-    keys=["binding","title","author", "price", "isbn","url"]
+    connection = sqlite3.connect('/Users/nataliemohun/Documents/GitHub/Booked-back-end/DataBase/bookedDataBase/db.sqlite3')
     
     
+    c = connection.cursor()
+    
+     
+    
+    keys= ["ISBN", 
+          "Title",
+          "Binding",
+          "Author",
+          "Price",
+          "LinkUrl"]
+    
+    """
+    uncomment for blank databases insertino/naming of columns   
     for i in range(0,len(keys)):
         query="ALTER TABLE b ADD "+keys[i]+" VARCHAR(100)"
         c.execute(query) 
         conn.commit()
-    
+    """
     
     
     b=[]
@@ -146,38 +155,33 @@ def insert(vals):
         p.append(vals[i][3])
         isbn.append(vals[i][4])
         u.append(vals[i][5])
+
+    bookTable="singleBookData_book"
         
-    print(b,t,a,p,isbn,u)
+    #print(b,t,a,p,isbn,u)
     
-    for i in range(len(vals[i])):
-        c.execute("INSERT INTO b("+keys[0]+","+keys[1]+","+keys[2]+","
+    #print(len(vals))
+    
+    
+    
+    for i in range(0,len(vals)):
+        print("VALUES("+isbn[i]+","+t[i]+","+a[i]+","+b[i]+","+p[i]+","+u[i]+")")
+        
+        c.execute("INSERT INTO "+bookTable+"("+keys[0]+","+keys[1]+","+keys[2]+","
                   +keys[3]+","+keys[4]+","+keys[5]+") VALUES("
-                  +b[i]+","+t[i]+","+a[i]+","+p[i]+","+isbn[i]+","+u[i]+")")
-        conn.commit() 
+                  +isbn[i]+","+t[i]+","+a[i]+","+b[i]+","+p[i]+","+u[i]+")")
+        connection.commit() 
     
     
-            
-            
-        #c.execute("INSERT INTO a("+col+") VALUES("+vals[i][2]+")")
-        #conn.commit() 
-    #c.execute("INSERT INTO t(binding) VALUES("+(vals[0][0])+")")
+
    
 
     
     
-    conn.close()
+    connection.close()
     
         
-        
-        
-        
-                
-        
-    
-    
-"""   
 
-"""
 #main below
 
 
