@@ -128,8 +128,8 @@ def insert(vals):
     
     keys= ["ISBN", 
           "Title",
-          "Binding",
           "Author",
+          "Binding",
           "Price",
           "LinkUrl"]
     
@@ -149,11 +149,11 @@ def insert(vals):
     isbn=[]
     u=[]
     for i in range(len(vals)):
-        b.append(vals[i][0])
+        isbn.append(vals[i][4])
         t.append(vals[i][1])
         a.append(vals[i][2])
+        b.append(vals[i][0])
         p.append(vals[i][3])
-        isbn.append(vals[i][4])
         u.append(vals[i][5])
 
     bookTable="singleBookData_book"
