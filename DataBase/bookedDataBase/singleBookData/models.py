@@ -9,3 +9,4 @@ class book(models.Model):
     Author =models.CharField(max_length =5000)
     Price =models.FloatField(max_length=300)
     LinkUrl =models.URLField(max_length=5000)
+    BookStore = models.CharField(max_length=5000)
