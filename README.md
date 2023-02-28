@@ -37,14 +37,25 @@ find.py: Consolidation of all scraper scripts.
 ### Hampton Roads Bookshops:
 
 Dog Eared Books: Inventory not available online
+
 Barnes and Noble
+
 The Way We Were: No Website available
+
 Bender's Books and Cards: No Website available
+
 Prince Books
+
 Paperbacks Ink: Inventory not available online
+
 Book Owl: No Website available
+
 Jeannie's Used Books: No Website available
+
 afk Books and Records: No Website available
+
 2nd and Charles
+
 Book Exchange: Inventory not available online
+
 Eleanor's Norfolk: Inventory not available online
