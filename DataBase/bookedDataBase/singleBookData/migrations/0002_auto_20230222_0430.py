@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='bookdata',
+            model_name='book',
             name='ISBN',
             field=models.IntegerField(),
         ),
