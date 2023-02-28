@@ -1,7 +1,7 @@
 import sys
 import json
 import time
-import pandas as pd
+#import pandas as pd
 from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.service import Service
@@ -62,4 +62,4 @@ def scrape_the_strand(book):
     # return data
 
 
-scrape_the_strand(sys.argv[1])
+#scrape_the_strand(sys.argv[1])
