@@ -77,6 +77,7 @@ def get_details(listing):
     all_details['isbn'] = isbn
     all_details['url'] = url
     all_details['store'] = "Prince Books"
+    all_details['condition'] = 'New'
 
     return all_details
 
