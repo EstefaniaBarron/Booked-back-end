@@ -5,6 +5,24 @@ import os
 from itertools import chain
 
 
+outputfile="/Users/nataliemohun/Documents/GitHub/Booked-back-end/scripts/scrapers/search_outputs/The_great_gatsby_search_output.txt"
+bookTable="singleBookData_book"
+connection = sqlite3.connect('/Users/nataliemohun/Documents/GitHub/Booked-back-end/DataBase/bookedDataBase/db.sqlite3')
+c = connection.cursor()
+
+keys= ["ISBN", 
+      "Title",
+      "Author",
+      "Binding",
+      "Price",
+      "LinkUrl",
+      "BookStore"]
+
+"""
+The database ISBN list that gets checked and updated after
+each insertion
+"""
+DB_ISBN=[]
 
 def parseBookObj(outputfile):
     f=open(outputfile,'r')
@@ -26,7 +44,7 @@ def parseBookObj(outputfile):
           
 def addBookObj(bookFlagStart,bookFileEnd,file_lst):
     
-    numBooks=int(len(bookFlagStart)/2)
+    numBooks=int(len(bookFlagStart))
     
     books=[]
     for i in range(0,numBooks):
@@ -36,16 +54,15 @@ def addBookObj(bookFlagStart,bookFileEnd,file_lst):
     book =[]
     for i in books:
         j = str(i)
-        #print(j)
         book.append(j)
-        
-    #print(book)
+    
     
     
     b =[[]]
     
-    b=[book[i::9] for i in range(9)]
-    
+    #create book matrix [book[bookData]]
+    b=[book[i::numBooks] for i in range(numBooks)]
+    #print(b)
     
     
     return b
@@ -72,66 +89,62 @@ def getVals(b):
     for i in v:
         c+=str(i).split(flag)
     seq=c[1::2]  
-    vals=[seq[i:i+6] for i in range(0,len(seq),6)]
+    vals=[seq[i:i+7] for i in range(0,len(seq),7)]
             
+    """
+    for i in vals:
+        for j in i:
+            print(j)
+    """
     
-    #for i in vals:
-        #for j in i:
-            #print(j)
-    
-    #vals = cleaned values   
+    #vals = cleaned values 
+    # ex:   "Hardcover"
     return vals
     
-  
 
-    """
-    @todo: 
-        parse output file to format for sqldb and pass into insertBook function 
-        [{"binding": "Paperback", 
-        "title": "The Great Gatsby: The Only Authorized Edition", 
-        "author": "F. Scott Fitzgerald", 
-        "price": "$17.00", 
-        "isbn": "9780743273565", 
-        "url": "https://www.prince-books.com/book/9780743273565"}, 
-        {"binding": "Hardcover", "title": "The Great Gatsby", 
-        "author": "F. Scott Fitzgerald", 
-        "price": "$12.99", 
-        "isbn": "9781509826360", 
-        "url": "https://www.prince-books.com/book/9781509826360"}]
-    """
-def printSQL(cursor):
-    query="select * from booked_book"
+def printSQL(c):
+    query=("select * from "+bookTable)
     
-    cursor.execute(query)
+    c.execute(query)
     
-    rows=cursor.fetchall()
+    rows=c.fetchall()
     
     # print(rows)
     for row in rows:
         for col in row:
             print(col,end=' ')
-        print()
+        print('\n')
    
-    cursor.close()
 
+        
+def getDB_ISBN(vals):
+    c.execute("SELECT ISBN FROM "+bookTable)
+    DB_ISBN_List = c.fetchall()
+    
+    for x in DB_ISBN_List:
+        x = str(x).replace('(', '"')
+        x = str(x).replace(',)', '"')
+        DB_ISBN.append(x)
+        
+    print(DB_ISBN)
+        
+    return DB_ISBN
 
+def checkISBNDuplicates(isbn, DB_ISBN):
+    
+    found = False
+    
+    print("checking if ",isbn," is in: ",DB_ISBN)
+    if isbn in DB_ISBN:
+            print("isbn: ",isbn," found in DB:\n",DB_ISBN)
+            found = True
+            print(found)
+
+    return found
         
 def insert(vals):
     
-    
-    connection = sqlite3.connect('/Users/nataliemohun/Documents/GitHub/Booked-back-end/DataBase/bookedDataBase/db.sqlite3')
-    
-    
-    c = connection.cursor()
-    
-     
-    
-    keys= ["ISBN", 
-          "Title",
-          "Author",
-          "Binding",
-          "Price",
-          "LinkUrl"]
+
     
     """
     uncomment for blank databases insertino/naming of columns   
@@ -148,37 +161,40 @@ def insert(vals):
     p=[]
     isbn=[]
     u=[]
+    s=[]
     for i in range(len(vals)):
         isbn.append(vals[i][4])
+        print(vals[i][4])
         t.append(vals[i][1])
         a.append(vals[i][2])
         b.append(vals[i][0])
         p.append(vals[i][3])
         u.append(vals[i][5])
+        s.append(vals[i][6])
 
-    bookTable="singleBookData_book"
-        
-    #print(b,t,a,p,isbn,u)
-    
-    #print(len(vals))
-    
-    
-    
+    print(isbn)
+    """
+        key sequence:
+        "ISBN", 
+        "Title",
+        "Author",
+        "Binding",
+        "Price",
+        "LinkUrl",
+        "BookStore"
+    """
     for i in range(0,len(vals)):
-        print("VALUES("+isbn[i]+","+t[i]+","+a[i]+","+b[i]+","+p[i]+","+u[i]+")")
-        
-        c.execute("INSERT INTO "+bookTable+"("+keys[0]+","+keys[1]+","+keys[2]+","
-                  +keys[3]+","+keys[4]+","+keys[5]+") VALUES("
-                  +isbn[i]+","+t[i]+","+a[i]+","+b[i]+","+p[i]+","+u[i]+")")
+        isbnToCheck = vals[i][4]
+        DB_ISBN=getDB_ISBN(vals)
+        if checkISBNDuplicates(isbnToCheck,DB_ISBN )==True:
+            continue      
+       
+        c.execute("INSERT INTO "+bookTable+"("+keys[0]+","+keys[1]+","
+                  +keys[2]+","+keys[3]+","+keys[4]+","+keys[5]+","+keys[6]+")" 
+                  +"VALUES("+isbn[i]+","+t[i]+","+a[i]+","+b[i]+","+p[i]+","+u[i]+","+s[i]+")")
         connection.commit() 
     
-    
 
-   
-
-    
-    
-    connection.close()
     
         
 
@@ -188,18 +204,18 @@ def insert(vals):
 
 
 #the table in db is booked_boook
-outputfile = 'scrapers/outputfile'
 file_lst=[]
 bookFlagStart=[]
 bookFlagEnd=[]
 
 bookFlagStart,bookFileEnd,file_lst=parseBookObj(outputfile)
 
-#get list of books
-#a matrix
 b=addBookObj(bookFlagStart, bookFileEnd,file_lst)
 
 vals=getVals(b)
+getDB_ISBN(vals)
 insert(vals)
+
+#printSQL(c)
 
 
