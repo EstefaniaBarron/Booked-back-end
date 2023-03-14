@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 # Create your models here.
+#for help: https://realpython.com/django-migrations-a-primer/
 class book(models.Model):
     ISBN = models.IntegerField()
     Title= models.CharField(max_length=5000)
