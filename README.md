@@ -4,30 +4,38 @@ Back-end for Booked prototype. Team Gold, CS 411W
 
 ## scripts/scrapers folder
 
-**the_strand.py**: File scrapes through inventory of The Strand bookstore searching for input title, and outputs a file containing a list of listings. Each listing is in the following format: {title, author, price, binding, link}
-Updates: Not being used in find.py, since The Strand is out of the Hampton Rds area :(
+### **the_strand.py**:
+
+File scrapes through inventory of The Strand bookstore searching for input title, and outputs a file containing a list of listings. Each listing is in the following format: {title, author, price, binding, link}
+**Updates:** Not being used in find.py, since The Strand is out of the Hampton Rds area :(
 
     Usage: to use, provide a string title for the search
     Example: python the_strand.py "Love in the Time of Cholera"
 
-**prince_bookstore.py**: Script scrapes through inventory of Prince Bookstore (Norfolk, VA), searches for input string, and returns details of books currently available in-store.
+### **prince_bookstore.py**:
+
+Script scrapes through inventory of Prince Bookstore (Norfolk, VA), searches for input string, and returns details of books currently available in-store.
 
     Usage: Called on by find.py
 
-**second_and_charles.py**: Script scrapes through inventory of 2nd and Charles website, searches for input string, and returns details of books available in-store.
+### **second_and_charles.py**:
+
+Script scrapes through inventory of 2nd and Charles website, searches for input string, and returns details of books available in-store.
 
     Usage: Called on by find.py
 
-Considerations: 2nd and Charles website does not specify which of the store's location each listing is available at.
+**Considerations:** 2nd and Charles website does not specify which of the store's location each listing is available at.
 
-**find.py**: Consolidation of all scraper scripts.
+### **find.py**:
+
+Consolidation of all scraper scripts.
 
     Usage: python3 find.py "input"
     *where input is a book title, author, isbn, or keyword
 
-Details: find.py calls on each one of the scraper scripts sending the 'input' string as an argument.
+**Details:** find.py calls on each one of the scraper scripts sending the 'input' string as an argument.
 
-Output: Script will add a file to the search_outputs folder with the name 'input_search_output.txt', where 'input' is the input string used in the search.
+**Output:** Script will add a file to the search_outputs folder with the name 'input_search_output.txt', where 'input' is the input string used in the search.
 
     Output file will be in the form "[{listing},{listing},{listing}...]
     where each listing is an object in the form:
