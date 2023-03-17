@@ -6,7 +6,7 @@ import sys
 
 
 def find(book):
-    with open("search_outputs/"+book+"_search_output.txt", "w") as output:
+    with open("search_outputs/"+book+"_search_output.csv", "w") as output:
         json.dump(scrape_prince_books(book), output)
         json.dump(scrape_2nd_and_charles(book), output)
 

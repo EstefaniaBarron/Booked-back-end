@@ -47,7 +47,7 @@ def scrape_2nd_and_charles(book):
     for listing in listings:
         data.append(get_details(listing))
     # print(data)
-    driver.quit()
+    #driver.quit()
     return data
 
 
@@ -59,7 +59,7 @@ def get_details(listing):
         "price": "",
         "isbn": "",
         "url": "",
-        "store": "2nd & Charles",
+        "store": "Second and Charles",
         "condition": "N/A"
     }
 
@@ -89,7 +89,7 @@ def get_details(listing):
     book_details['isbn'] = obj['isbn'][obj['isbn'].index(
         'ISBN # ')+len('ISBN # '):] if obj['isbn'] != "N/A"else obj['isbn']
     book_details['url'] = link
-    driver_two.quit()
+    #driver_two.quit()
 
     return book_details
 

@@ -1,1 +1,1 @@
-[][{"binding": "N/A", "title": "Euphoria", "author": "Lily King", "price": "$5.95", "isbn": "9780802123701", "url": "https://www.2ndandcharles.com/shop/euphoria-250669", "store": "2nd & Charles"}]
+[][{"binding": "N/A", "title": "Euphoria", "author": "Lily King", "price": "$5.95", "isbn": "9780802123701", "url": "https://www.2ndandcharles.com/shop/euphoria-250669", "store": "Second and Charles"}]
