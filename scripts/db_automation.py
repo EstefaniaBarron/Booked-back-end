@@ -5,18 +5,21 @@ import os
 from itertools import chain
 
 
-outputfile="/Users/nataliemohun/Documents/GitHub/Booked-back-end/scripts/scrapers/search_outputs/The_great_gatsby_search_output.txt"
+outputfile="/Users/nataliemohun/Documents/GitHub/Booked-back-end/scripts/scrapers/search_outputs/The Great Gatsby_search_output.txt"
 bookTable="singleBookData_book"
+listingTable = "singleBookData_listing"
 connection = sqlite3.connect('/Users/nataliemohun/Documents/GitHub/Booked-back-end/DataBase/bookedDataBase/db.sqlite3')
 c = connection.cursor()
 
-keys= ["ISBN", 
+singleBookKeys= ["ISBN", 
       "Title",
       "Author",
-      "Binding",
-      "Price",
-      "LinkUrl",
-      "BookStore"]
+      "Binding",]
+
+listingBookKeys =["isbn_id","price","book_store_id","link_url"]
+    
+    
+
 
 """
 The database ISBN list that gets checked and updated after
@@ -89,21 +92,32 @@ def getVals(b):
     for i in v:
         c+=str(i).split(flag)
     seq=c[1::2]  
-    vals=[seq[i:i+7] for i in range(0,len(seq),7)]
+    vals=[seq[i:i+8] for i in range(0,len(seq),8)]
             
-    """
-    for i in vals:
-        for j in i:
-            print(j)
-    """
+    
+    
+    
     
     #vals = cleaned values 
     # ex:   "Hardcover"
     return vals
     
 
-def printSQL(c):
+def printsingleBookTableSQL(c):
     query=("select * from "+bookTable)
+    
+    c.execute(query)
+    
+    rows=c.fetchall()
+    
+    # print(rows)
+    for row in rows:
+        for col in row:
+            print(col,end=' ')
+        print('\n')
+        
+def printlistingBookTableSQL(c):
+    query=("select * from "+listingTable)
     
     c.execute(query)
     
@@ -141,59 +155,108 @@ def checkISBNDuplicates(isbn, DB_ISBN):
             print(found)
 
     return found
-        
-def insert(vals):
-    
 
+
+
+def searchMappingSingleBook(vals):
+    singleBookDictionary ={}
+    #key= ISBN #value = entire book data 
+    for i in range(len(vals)):
+        isbn=vals[i][4]
+        #print(isbn)
+        singleBookDictionary[isbn]=vals[i]
+        
+    #print(singleBookDictionary,"\n")
+    #print(singleBookDictionary.keys())
+    return singleBookDictionary
+
+
+def insertListings(vals):
     
-    """
-    uncomment for blank databases insertino/naming of columns   
-    for i in range(0,len(keys)):
-        query="ALTER TABLE b ADD "+keys[i]+" VARCHAR(100)"
-        c.execute(query) 
-        conn.commit()
-    """
-    
-    
-    b=[]
-    t=[]
-    a=[]
-    p=[]
+    #for i in vals:
+        #print(i,"\n\n")
+        
     isbn=[]
-    u=[]
-    s=[]
+    price=[]
+    url=[]
+    storeName=[]
+    condition=[]
+        
     for i in range(len(vals)):
         isbn.append(vals[i][4])
-        print(vals[i][4])
-        t.append(vals[i][1])
-        a.append(vals[i][2])
-        b.append(vals[i][0])
-        p.append(vals[i][3])
-        u.append(vals[i][5])
-        s.append(vals[i][6])
+        price.append(vals[i][3])
+        url.append(vals[i][5])
+        storeName.append(vals[i][6])
+        condition.append(vals[i][7])
+        
+    # listing key sequence =["isbn_id","price","book_store_id","link_url"]
+    
+        
+    for i in range(0,len(vals)): 
+         c.execute("INSERT INTO "+listingTable+"("+listingBookKeys[0]+","+listingBookKeys[1]+","
+                   +listingBookKeys[2]+","+listingBookKeys[3]+")" 
+                   +"VALUES("+isbn[i]+","+price[i]+","+storeName[i]+","+url[i]+")")
+         connection.commit() 
 
-    print(isbn)
+
+
+
+def insertSingleBookDictionary(singleBookDictionary):
+
+    singleBook =[]
+   
+    
+    for i in singleBookDictionary:
+        print(i,"\n\n",singleBookDictionary.get(i))
+        singleBook.append(singleBookDictionary.get(i))
+
+
+
+    #print(singleBook)
+    
+    binding=[]
+    title=[]
+    author=[]
+    isbn=[]
+   
+
+    for i in range(len(singleBook)):
+        isbn.append(singleBook[i][4])
+        title.append(singleBook[i][1])
+        author.append(singleBook[i][2])
+        binding.append(singleBook[i][0])
+        
+        
+   
     """
-        key sequence:
-        "ISBN", 
-        "Title",
-        "Author",
-        "Binding",
-        "Price",
-        "LinkUrl",
-        "BookStore"
-    """
-    for i in range(0,len(vals)):
-        isbnToCheck = vals[i][4]
+         singlebook key sequence:
+         "ISBN", 
+         "Title",
+         "Author",
+         "Binding",
+     """
+     #Globals of the table names
+     #listingTable = singleBookData_listing
+     #bookTable = singleBookData_book
+  
+    for i in range(0,len(singleBook)): 
+        isbnToCheck = singleBook[i][4]
+        
+        #make sure ISBN is only entered once
         DB_ISBN=getDB_ISBN(vals)
         if checkISBNDuplicates(isbnToCheck,DB_ISBN )==True:
-            continue      
-       
-        c.execute("INSERT INTO "+bookTable+"("+keys[0]+","+keys[1]+","
-                  +keys[2]+","+keys[3]+","+keys[4]+","+keys[5]+","+keys[6]+")" 
-                  +"VALUES("+isbn[i]+","+t[i]+","+a[i]+","+b[i]+","+p[i]+","+u[i]+","+s[i]+")")
+            continue  
+        
+        
+        c.execute("INSERT INTO "+bookTable+"("+singleBookKeys[0]+","+singleBookKeys[1]+","
+                   +singleBookKeys[2]+","+singleBookKeys[3]+")" 
+                   +"VALUES("+isbn[i]+","+title[i]+","+author[i]+","+binding[i]+")")
         connection.commit() 
+        
+    insertListings(vals)
     
+        
+
 
     
         
@@ -213,9 +276,17 @@ bookFlagStart,bookFileEnd,file_lst=parseBookObj(outputfile)
 b=addBookObj(bookFlagStart, bookFileEnd,file_lst)
 
 vals=getVals(b)
-getDB_ISBN(vals)
-insert(vals)
+#getDB_ISBN(vals)
+
+
+singleBookDictionary = searchMappingSingleBook(vals)
+
+
+#calls insert listing so we avoid duplicate insertion of listings 
+insertSingleBookDictionary(singleBookDictionary)
+
 
 #printSQL(c)
-
+printsingleBookTableSQL(c)
+printlistingBookTableSQL(c)
 
