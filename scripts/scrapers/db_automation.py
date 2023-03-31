@@ -5,7 +5,7 @@ import os
 from itertools import chain
 
 
-outputfile="/Users/nataliemohun/Documents/GitHub/Booked-back-end/scripts/scrapers/search_outputs/The Great Gatsby_search_output.txt"
+
 bookTable="singleBookData_book"
 listingTable = "singleBookData_listing"
 connection = sqlite3.connect('/Users/nataliemohun/Documents/GitHub/Booked-back-end/DataBase/bookedDataBase/db.sqlite3')
@@ -28,6 +28,8 @@ each insertion
 DB_ISBN=[]
 
 def parseBookObj(outputfile):
+    bookFlagStart=[]
+    bookFlagEnd=[]
     f=open(outputfile,'r')
     file_lst=f.read()
     charCount=0
@@ -45,7 +47,7 @@ def parseBookObj(outputfile):
     return bookFlagStart,bookFlagEnd,file_lst
 
           
-def addBookObj(bookFlagStart,bookFileEnd,file_lst):
+def addBookObj(bookFlagStart,bookFlagEnd,file_lst):
     
     numBooks=int(len(bookFlagStart))
     
@@ -94,6 +96,7 @@ def getVals(b):
     seq=c[1::2]  
     vals=[seq[i:i+8] for i in range(0,len(seq),8)]
             
+    #print(vals)
     
     
     
@@ -131,7 +134,7 @@ def printlistingBookTableSQL(c):
    
 
         
-def getDB_ISBN(vals):
+def getDB_ISBN():
     c.execute("SELECT ISBN FROM "+bookTable)
     DB_ISBN_List = c.fetchall()
     
@@ -140,7 +143,7 @@ def getDB_ISBN(vals):
         x = str(x).replace(',)', '"')
         DB_ISBN.append(x)
         
-    print(DB_ISBN)
+    #print(DB_ISBN)
         
     return DB_ISBN
 
@@ -148,11 +151,11 @@ def checkISBNDuplicates(isbn, DB_ISBN):
     
     found = False
     
-    print("checking if ",isbn," is in: ",DB_ISBN)
+    #print("checking if ",isbn," is in: ",DB_ISBN)
     if isbn in DB_ISBN:
-            print("isbn: ",isbn," found in DB:\n",DB_ISBN)
+            #print("isbn: ",isbn," found in DB:\n",DB_ISBN)
             found = True
-            print(found)
+            #print(found)
 
     return found
 
@@ -201,13 +204,13 @@ def insertListings(vals):
 
 
 
-def insertSingleBookDictionary(singleBookDictionary):
+def insertSingleBookDictionary(singleBookDictionary,vals):
 
     singleBook =[]
    
     
     for i in singleBookDictionary:
-        print(i,"\n\n",singleBookDictionary.get(i))
+        #print(i,"\n\n",singleBookDictionary.get(i))
         singleBook.append(singleBookDictionary.get(i))
 
 
@@ -243,17 +246,20 @@ def insertSingleBookDictionary(singleBookDictionary):
         isbnToCheck = singleBook[i][4]
         
         #make sure ISBN is only entered once
-        DB_ISBN=getDB_ISBN(vals)
+        #get the list of databse ISBN from book table
+        DB_ISBN=getDB_ISBN()
         if checkISBNDuplicates(isbnToCheck,DB_ISBN )==True:
+            print("this book was already in the book table\n")
             continue  
         
-        
-        c.execute("INSERT INTO "+bookTable+"("+singleBookKeys[0]+","+singleBookKeys[1]+","
+        if checkISBNDuplicates(isbnToCheck,DB_ISBN )==False:
+            print("this is a new book to add to single book table\n")
+            c.execute("INSERT INTO "+bookTable+"("+singleBookKeys[0]+","+singleBookKeys[1]+","
                    +singleBookKeys[2]+","+singleBookKeys[3]+")" 
                    +"VALUES("+isbn[i]+","+title[i]+","+author[i]+","+binding[i]+")")
-        connection.commit() 
-        
-    insertListings(vals)
+            connection.commit() 
+            #this was a new book so populate listings tables
+            insertListings(vals)
     
         
 
@@ -265,28 +271,33 @@ def insertSingleBookDictionary(singleBookDictionary):
 
 
 
-
-#the table in db is booked_boook
-file_lst=[]
-bookFlagStart=[]
-bookFlagEnd=[]
-
-bookFlagStart,bookFileEnd,file_lst=parseBookObj(outputfile)
-
-b=addBookObj(bookFlagStart, bookFileEnd,file_lst)
-
-vals=getVals(b)
-#getDB_ISBN(vals)
+def driver(outputfile):
 
 
-singleBookDictionary = searchMappingSingleBook(vals)
+    #the table in db is booked_boook
+    file_lst=[]
+    bookFlagStart=[]
+    bookFlagEnd=[]
+
+    bookFlagStart,bookFlagEnd,file_lst=parseBookObj(outputfile)
+
+    b=addBookObj(bookFlagStart, bookFlagEnd,file_lst)
+
+    vals=getVals(b)
+    
+    singleBookDictionary = searchMappingSingleBook(vals)
 
 
-#calls insert listing so we avoid duplicate insertion of listings 
-insertSingleBookDictionary(singleBookDictionary)
+    #calls insert listing so we avoid duplicate insertion of listings 
+    insertSingleBookDictionary(singleBookDictionary,vals)
 
 
-#printSQL(c)
-printsingleBookTableSQL(c)
-printlistingBookTableSQL(c)
+    #printSQL(c)
+    #printsingleBookTableSQL(c)
+    #printlistingBookTableSQL(c)
 
+
+#testing 
+#testing file below to test just uncomment driver
+#outputfile="/Users/nataliemohun/Documents/GitHub/Booked-back-end/scripts/scrapers/search_outputs/pride and prejudice_search_output.txt"
+#driver(outputfile)
