@@ -2,6 +2,18 @@
 
 Back-end for Booked prototype. Team Gold, CS 411W
 
+## Rest API
+
+There are currently two end points in the Rest API:
+
+### **/books** ###:
+
+Returns all books in database in JSON format
+
+### **/sellers** ###:
+
+Returns a list of all sellers that had a useful site in Hampton Roads, and their locations
+
 ## scripts/scrapers folder
 
 ### **the_strand.py**:
