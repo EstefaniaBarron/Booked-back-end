@@ -1,8 +1,10 @@
 import sqlite3
 import os
 
-
 from itertools import chain
+
+from DataBase.bookDataBase.singleBookData.models import Book
+from DataBase.bookDataBase.singleBookData.models import Listing
 
 
 
@@ -114,10 +116,12 @@ def printsingleBookTableSQL(c):
     rows=c.fetchall()
     
     # print(rows)
+  
     for row in rows:
         for col in row:
             print(col,end=' ')
         print('\n')
+
         
 def printlistingBookTableSQL(c):
     query=("select * from "+listingTable)
@@ -174,10 +178,12 @@ def searchMappingSingleBook(vals):
     return singleBookDictionary
 
 
-def insertListings(vals):
+def insertListings(vals,bookObject):
     
     #for i in vals:
         #print(i,"\n\n")
+
+    #bookObject is single book django Object specific to the listings
         
     isbn=[]
     price=[]
@@ -186,11 +192,17 @@ def insertListings(vals):
     condition=[]
         
     for i in range(len(vals)):
+        #each new iteration represents a new listing/linking to the passed in bookObject
         isbn.append(vals[i][4])
         price.append(vals[i][3])
         url.append(vals[i][5])
         storeName.append(vals[i][6])
         condition.append(vals[i][7])
+        listingObject = "listing_"+str(i)
+        #creating a new listing using the Book object
+        #linking bookstore = single book object and isbn = single book object keys
+        listingObject = Listing(book_store=bookObject,link_url=url[i],price=price[i],isbn=bookObject)
+        listingObject.save()
         
     # listing key sequence =["isbn_id","price","book_store_id","link_url"]
     
@@ -212,6 +224,7 @@ def insertSingleBookDictionary(singleBookDictionary,vals):
     for i in singleBookDictionary:
         #print(i,"\n\n",singleBookDictionary.get(i))
         singleBook.append(singleBookDictionary.get(i))
+        
 
 
 
@@ -245,13 +258,28 @@ def insertSingleBookDictionary(singleBookDictionary,vals):
     for i in range(0,len(singleBook)): 
         isbnToCheck = singleBook[i][4]
         
+        
+        
+        
         #make sure ISBN is only entered once
         #get the list of databse ISBN from book table
         DB_ISBN=getDB_ISBN()
         if checkISBNDuplicates(isbnToCheck,DB_ISBN )==True:
             print("this book was already in the book table\n")
-            continue  
+            continue
+
+        #https://docs.djangoproject.com/en/4.1/topics/db/examples/many_to_one/
+        #book_store = models.ForeignKey(Book, related_name='available_at', on_delete=models.CASCADE)
+        #create a new book object
+        #per link book is reporter listing is article
         
+        #bookObject = str("singleBook_"+str(i))
+        #model object
+        bookObject = Book(author=author[i],binding=binding[i],isbn=isbn[i],title=title[i])
+        bookObject.save()
+        print(bookObject.__sizeof__)
+        
+
         if checkISBNDuplicates(isbnToCheck,DB_ISBN )==False:
             print("this is a new book to add to single book table\n")
             c.execute("INSERT INTO "+bookTable+"("+singleBookKeys[0]+","+singleBookKeys[1]+","
@@ -259,7 +287,7 @@ def insertSingleBookDictionary(singleBookDictionary,vals):
                    +"VALUES("+isbn[i]+","+title[i]+","+author[i]+","+binding[i]+")")
             connection.commit() 
             #this was a new book so populate listings tables
-            insertListings(vals)
+            insertListings(vals,bookObject)
     
         
 
@@ -299,5 +327,5 @@ def driver(outputfile):
 
 #testing 
 #testing file below to test just uncomment driver
-#outputfile="/Users/nataliemohun/Documents/GitHub/Booked-back-end/scripts/scrapers/search_outputs/pride and prejudice_search_output.txt"
-#driver(outputfile)
+outputfile = "/Users/nataliemohun/Documents/GitHub/Booked-back-end/scripts/scrapers/search_outputs/The Great Gatsby_search_output.txt"
+driver(outputfile)
