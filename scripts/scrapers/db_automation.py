@@ -3,8 +3,8 @@ import os
 
 from itertools import chain
 
-from DataBase.bookDataBase.singleBookData.models import Book
-from DataBase.bookDataBase.singleBookData.models import Listing
+from DataBase.bookedDataBase.singleBookData.models import Book
+from DataBase.bookedDataBase.singleBookData.models import Listing
 
 
 
