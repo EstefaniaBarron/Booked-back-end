@@ -23,12 +23,22 @@ class SellerSerializer(serializers.ModelSerializer):
 class ListingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Listing
-        fields = ('book_store', 'link_url', 'price', 'isbn')
+        fields = ('book_store', 'link_url', 'price')
+
+
+class ListingsListSerializer(serializers.ModelSerializer):
+    # Add name of store in view, as opposed to id
+    book_store = serializers.CharField(source='book_store.StoreName')
+    #isbn = serializers.CharField(source='isbn.title')
+
+    class Meta:
+        model = Listing
+        fields = ('book_store', 'price', 'condition', 'link_url')
 
 
 class BookSerializer(serializers.ModelSerializer):
-    available_at = ListingsSerializer(many=True)
+    availability = ListingsListSerializer(many=True)
 
     class Meta:
         model = Book
-        fields = ('isbn', 'title', 'author', 'binding', 'available_at')
+        fields = ('isbn', 'title', 'author', 'binding', 'availability')

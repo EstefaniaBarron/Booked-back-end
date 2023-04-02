@@ -34,7 +34,7 @@ driver.implicitly_wait(5)
 # Receives book title
 # Scrapes through search results of The Strand website
 # Returns
-def scrape_2nd_and_charles(book, insert_in_db = False):
+def scrape_2nd_and_charles(book, insert_in_db=False):
     data = []
     url = "https://www.2ndandcharles.com/books/browse/keyword/" + \
         book.replace(" ", "%20")
@@ -47,7 +47,7 @@ def scrape_2nd_and_charles(book, insert_in_db = False):
     for listing in listings:
         data.append(get_details(listing))
     # print(data)
-    #driver.quit()
+    # driver.quit()
     return data
 
 
@@ -85,11 +85,11 @@ def get_details(listing):
     book_details['title'] = obj['title'].lstrip()
     book_details['author'] = obj['author'][obj['author'].index(
         'By ')+len('By '):] if obj['author'] != "N/A" else obj['author']
-    book_details['price'] = obj['price']
+    book_details['price'] = obj['price'][1:]
     book_details['isbn'] = obj['isbn'][obj['isbn'].index(
         'ISBN # ')+len('ISBN # '):] if obj['isbn'] != "N/A"else obj['isbn']
     book_details['url'] = link
-    #driver_two.quit()
+    # driver_two.quit()
 
     return book_details
 

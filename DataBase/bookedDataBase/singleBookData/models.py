@@ -11,7 +11,10 @@ class Book(models.Model):
 
 class Listing(models.Model):
     book_store = models.ForeignKey(
-        Book, related_name='available_at', on_delete=models.CASCADE)
+        bookSellerSite, related_name='available_at', on_delete=models.CASCADE)
     link_url = models.URLField(max_length=5000)
+    condition = models.CharField(max_length=100)
     price = models.FloatField(max_length=300)
-    isbn = models.ForeignKey(Book, on_delete=models.CASCADE)
+    #price = models.DecimalField(max_digits=6, decimal_places=2)
+    isbn = models.ForeignKey(
+        Book, related_name="availability", on_delete=models.CASCADE)

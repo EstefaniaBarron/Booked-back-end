@@ -1,18 +1,49 @@
 from django.shortcuts import render
-
-# Create your views here.
 from rest_framework import viewsets
-
-#from ...api import AddressSerializer
-#from api.serializers import SellerSerializer
+import django_filters.rest_framework as filters
 from api.serializers import BookSerializer
-
-#from .models import bookSellerSite
-#from .models import Address
+from api.serializers import ListingsSerializer
+from api.serializers import ListingsListSerializer
 from .models import Listing
 from .models import Book
 
+# Filters through Books model.
+# Overwriting filterset class behavior to return books that contain title and author string vs exact match
+
+
+class BooksFilter(filters.FilterSet):
+    #title = filters.CharFilter(lookup_expr='icontains')
+    author = filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Book
+        fields = ['title', 'isbn', 'binding', 'author']
+        '''
+            fields = {
+            'title': ['iexact'],
+            'isbn': ['iexact'],
+            'binding': ['iexact'],
+            'author': ['icontains']
+            'price': ['iexact', 'lte', 'gte']
+        }
+        '''
+
+
+# Books model view.
+# Returns all objects in Books table
+
 
 class BooksView(viewsets.ModelViewSet):
-    serializer_class = BookSerializer
     queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    filterset_class = BooksFilter
+
+
+class ListingView(viewsets.ModelViewSet):
+    queryset = Listing.objects.all()
+    serializer_class = ListingsSerializer
+
+
+class ListingListView(viewsets.ModelViewSet):
+    queryset = Listing.objects.all()
+    serializer_class = ListingsListSerializer

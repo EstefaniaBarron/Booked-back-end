@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'seller',
     'rest_framework',
     'corsheaders',
+    'django_filters',
+    'django_extensions',
 
 ]
 
@@ -55,6 +57,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 ROOT_URLCONF = 'bookedDataBase.urls'
 

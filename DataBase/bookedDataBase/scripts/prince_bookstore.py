@@ -2,7 +2,7 @@ import time
 import sys
 import json
 from selenium.webdriver.support.ui import Select
-from DataBase.bookedDataBase.singleBookData.insert import insert_data
+#from DataBase.bookedDataBase.scripts.insert import insert_data
 from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.service import Service
@@ -31,7 +31,7 @@ driver.implicitly_wait(5)
 # Receives book title
 # Scrapes through search results of The Strand website
 # Returns
-def scrape_prince_books(book, insert_in_db=False):
+def scrape_prince_books(book):
     url = "https://www.prince-books.com/search/site/"+book.replace(" ", "%20")
     driver.get(url)
     time.sleep(10)
@@ -52,8 +52,8 @@ def scrape_prince_books(book, insert_in_db=False):
             av = "N/A"
         if av == ' On Our Shelves Now':
             data.append(get_details(listing))
-    if(insert_in_db):
-        insert_data(data)
+    # if(insert_in_db):
+        # insert_data(data)
 
     return data
 
@@ -70,7 +70,7 @@ def get_details(listing):
             By.XPATH, "div[@class='abaproduct-details']/p[@class='search-result-price']").text
     except NoSuchElementException:
         price = "N/A"
-    all_details['price'] = price
+    all_details['price'] = price[1:]
     isbn = listing.find_element(
         By.XPATH, "div[@class='abaproduct-details']/span").text[len("ISBN-13: "):]
 
