@@ -16,10 +16,15 @@ class BooksFilter(filters.FilterSet):
     author = filters.CharFilter(lookup_expr='icontains')
     condition = filters.CharFilter(
         field_name='availability__condition', lookup_expr='iexact')
+    price_max = filters.NumberFilter(
+        field_name='availability__price', lookup_expr='lte')
+    price_min = filters.NumberFilter(
+        field_name='availability__price', lookup_expr='gte')
 
     class Meta:
         model = Book
-        fields = ['title', 'isbn', 'binding', 'author', 'condition']
+        fields = ['title', 'isbn', 'binding', 'author',
+                  'condition', 'price_max', 'price_min']
 
 
 class ListingsFilter(filters.FilterSet):
