@@ -12,6 +12,16 @@ import requests
 import sqlite3
 from selenium.common.exceptions import NoSuchElementException
 
+"""Prince Bookstore Scraper
+This script searches for a given string in the Prince Bookstore inventory website, scrapes through the results and returns the details of all listings
+
+The file contains the following functions:
+    * scrape_prince_books - Uses selenium to search for given book and retrieves all results
+    * get_details - Retrieves details about a single listing from search results
+    * extract_details - Separates binding and title from the single string they are scraped as from the source
+
+
+"""
 
 # NOTE: Configuration taken from tutorial, might need to change later
 # start by defining the options
@@ -28,10 +38,26 @@ driver = Chrome(options=options, service=chrome_service)
 driver.implicitly_wait(5)
 
 
-# Receives book title
-# Scrapes through search results of The Strand website
-# Returns
 def scrape_prince_books(book):
+    """Uses selenium to search for given book and retrieves all results
+        Args:
+            book (str): A string represented the search term to be used in website
+                        Ex. Book title, author, ISBN, etc.
+        Returns:
+            data (list<obj>): A list of objects containg details of each listing retrieve from search
+                            Objects are in the form :
+                            {
+                                binding,
+                                title,
+                                author,
+                                price,
+                                isbn,
+                                url,
+                                store,
+                                condition
+                            }
+    """
+
     url = "https://www.prince-books.com/search/site/"+book.replace(" ", "%20")
     driver.get(url)
     time.sleep(10)
@@ -50,15 +76,34 @@ def scrape_prince_books(book):
 
         except NoSuchElementException:
             av = "N/A"
+        # Only scrape if listing is currently available in store
         if av == ' On Our Shelves Now':
             data.append(get_details(listing))
-    # if(insert_in_db):
-        # insert_data(data)
 
     return data
 
 
 def get_details(listing):
+    """Retrieves details about a single listing from search results
+        Args:
+            listing (selenium element): The individual listing element containing information about a single search result
+
+        Returns:
+            all_details (obj): An object containg the attributes and values of a single search resu;t
+                                Object is in the form:
+                                {
+                                    binding,
+                                    title,
+                                    author,
+                                    price,
+                                    isbn,
+                                    url,
+                                    store,
+                                    condition
+                                }
+
+
+    """
     title = listing.find_element(By.XPATH, "h3[@class='title']")
     url = title.find_element(By.TAG_NAME, "a").get_attribute('href')
     all_details = extract_details(title.text)

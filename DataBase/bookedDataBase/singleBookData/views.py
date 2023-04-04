@@ -12,29 +12,28 @@ from .models import Book
 
 
 class BooksFilter(filters.FilterSet):
-    #title = filters.CharFilter(lookup_expr='icontains')
+    title = filters.CharFilter(lookup_expr='icontains')
     author = filters.CharFilter(lookup_expr='icontains')
+    condition = filters.CharFilter(
+        field_name='availability__condition', lookup_expr='iexact')
 
     class Meta:
         model = Book
-        fields = ['title', 'isbn', 'binding', 'author']
-        '''
-            fields = {
-            'title': ['iexact'],
-            'isbn': ['iexact'],
-            'binding': ['iexact'],
-            'author': ['icontains']
-            'price': ['iexact', 'lte', 'gte']
+        fields = ['title', 'isbn', 'binding', 'author', 'condition']
+
+
+class ListingsFilter(filters.FilterSet):
+    class Meta:
+        model = Listing
+        fields = {
+            'price': ['lte', 'gte'],
+            'condition': ['iexact']
         }
-        '''
-
-
-# Books model view.
-# Returns all objects in Books table
 
 
 class BooksView(viewsets.ModelViewSet):
     queryset = Book.objects.all()
+
     serializer_class = BookSerializer
     filterset_class = BooksFilter
 
@@ -47,3 +46,4 @@ class ListingView(viewsets.ModelViewSet):
 class ListingListView(viewsets.ModelViewSet):
     queryset = Listing.objects.all()
     serializer_class = ListingsListSerializer
+    filterset_class = ListingsFilter

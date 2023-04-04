@@ -31,9 +31,6 @@ driver = Chrome(options=options, service=chrome_service)
 driver.implicitly_wait(5)
 
 
-# Receives book title
-# Scrapes through search results of The Strand website
-# Returns
 def scrape_2nd_and_charles(book, insert_in_db=False):
     data = []
     url = "https://www.2ndandcharles.com/books/browse/keyword/" + \
@@ -41,13 +38,15 @@ def scrape_2nd_and_charles(book, insert_in_db=False):
 
     driver.get(url)
     time.sleep(30)
-    #ordered_list = driver.find_element(By.CLASS_NAME,"row col-12 col-lg-9 px-0 products product-list-grid pl-0 pl-lg-4")
+
     listings = driver.find_elements(By.CSS_SELECTOR, "div.product-inner")
-    # print(ordered_list.attribute('innerHTML'))
+
     for listing in listings:
-        data.append(get_details(listing))
-    # print(data)
-    # driver.quit()
+        try:
+            data.append(get_details(listing))
+        except TimeoutException:
+            continue
+
     return data
 
 
@@ -87,9 +86,8 @@ def get_details(listing):
         'By ')+len('By '):] if obj['author'] != "N/A" else obj['author']
     book_details['price'] = obj['price'][1:]
     book_details['isbn'] = obj['isbn'][obj['isbn'].index(
-        'ISBN # ')+len('ISBN # '):] if obj['isbn'] != "N/A"else obj['isbn']
+        'ISBN # ')+len('ISBN # '):] if obj['isbn'] != "N/A"else 0
     book_details['url'] = link
-    # driver_two.quit()
 
     return book_details
 
