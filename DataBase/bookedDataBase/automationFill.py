@@ -3,19 +3,25 @@ import time
 import subprocess
 
 authorsFile = open("authors.txt",'r')
-authorsAdded = open("authors_added.txt","a")
-command="python manage.py runscript scrape_insert --script-args "
+completedAuthors = open("authors_added.txt","r")
+completed = list((completedAuthors.read()).split('\n'))
+#print(completed)
+lastUpdated = completed[-1]
+completedAuthors.close()
+
 toAdd = authorsFile.read()
-toAddList = toAdd.split('\n')
-list(toAddList)
+toAddList = list(toAdd.split('\n'))
 
-completed =[]
-toAddList = toAddList[14:]
+#find the index where we last left off on 
+for i in toAddList:
+    if i == lastUpdated:
+        newIndex = toAddList.index(i)
+        toAddList = toAddList[newIndex+1:]
 
-#print(toAddList)
+authorsAdded = open("authors_added.txt","a")
 
+command="python manage.py runscript scrape_insert --script-args "
 
-    
 
 for i in toAddList:
     name = '"'+i+'"'
@@ -28,3 +34,7 @@ for i in toAddList:
     authorsAdded.write(i+"\n")
     completed.append(name)
 
+
+#close all files
+authorsAdded.close()
+authorsFile.close()

@@ -89,4 +89,4 @@ Book Exchange: Inventory not available online
 Eleanor's Norfolk: Inventory not available online
 
 # Populate DJANGO ORM Database commands:
-
+use the automation script, automationFill.py path: .../Booked-back-end/DataBase/bookedDataBase/automationFill.py
