@@ -9,8 +9,11 @@ toAdd = authorsFile.read()
 toAddList = toAdd.split('\n')
 list(toAddList)
 print(toAddList)
-toAddList = toAddList[1:]
-print(toAddList)
+completed =[]
+toAddList = toAddList[14:]
+
+
+    
 
 for i in toAddList:
     name = '"'+i+'"'
@@ -20,6 +23,8 @@ for i in toAddList:
 
     subprocess.call(commandToRun, shell=True)
     print("\n\n\ncompleted\n\n")
-    authorsAdded.write(name+"\n")
+    authorsAdded.write(i+"\n")
+    completed.append(name)
+
 
 
