@@ -87,3 +87,6 @@ afk Books and Records: No Website available
 Book Exchange: Inventory not available online
 
 Eleanor's Norfolk: Inventory not available online
+
+# Populate DJANGO ORM Database commands:
+
