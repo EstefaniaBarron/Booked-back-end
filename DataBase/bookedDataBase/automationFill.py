@@ -8,9 +8,11 @@ command="python manage.py runscript scrape_insert --script-args "
 toAdd = authorsFile.read()
 toAddList = toAdd.split('\n')
 list(toAddList)
-print(toAddList)
+
 completed =[]
 toAddList = toAddList[14:]
+
+#print(toAddList)
 
 
     
@@ -25,6 +27,4 @@ for i in toAddList:
     print("\n\n\ncompleted\n\n")
     authorsAdded.write(i+"\n")
     completed.append(name)
-
-
 
