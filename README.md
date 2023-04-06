@@ -90,3 +90,5 @@ Eleanor's Norfolk: Inventory not available online
 
 # Populate DJANGO ORM Database commands:
 use the automation script, automationFill.py path: .../Booked-back-end/DataBase/bookedDataBase/automationFill.py
+# Server update
+after the automation script runs,run python manage.py makemigrations to update the database 
