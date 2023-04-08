@@ -8,6 +8,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bookedDataBase.settings')
 #run this command first in terminal
 #export DJANGO_SETTINGS_MODULE=bookedDataBase.settings
 
+#after the functino call, make migrations in terminal
+
 from django.conf import settings
 from singleBookData.models import Book
 from singleBookData.models import Listing
