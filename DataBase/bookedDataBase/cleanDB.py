@@ -15,9 +15,9 @@ from singleBookData.models import Book
 from singleBookData.models import Listing
 
 def cleanCondition():
-    listingsToClean = Listing.objects.filter(condition="N/A").update(condition="Used")
-    print(listingsToClean)
-    listingsDirty = Listing.objects.filter(condition="N/A")
+    #listingsToClean = Listing.objects.filter(condition="N/A").update(condition="Used")
+    #print(listingsToClean)
+    listingsDirty = Listing.objects.filter(condition="Used").filter(price__gte=13.00).values().update(condition="New")
     print("conditions N/A found:",listingsDirty,"\n")
 
 
