@@ -9,7 +9,7 @@ from api.serializers import ListingsListSerializer
 from .models import Listing
 from .models import Book
 
-<< << << < HEAD
+
 # Filters through Books model.
 # Overwriting filterset class behavior to return books that contain title and author string vs exact match
 
