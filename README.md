@@ -6,7 +6,9 @@ The contents of this README will be focused on:
 - Project installation
 - Usage of scraping functionality
 - Accessing of database
-- REST API usage
+- REST API
+  - Endpoints and Model Overview
+  - Data Requests and Filtering
 
 ## Project Installation
 
@@ -57,64 +59,57 @@ To access and visualize database contents:
 2. Run the following command: `python manage.py runserver`
 3. Open web browser of choice (the right choice is always Crome...)
 4. On the browser, go to localhost: **http://127.0.0.1:8000/**
-5. Three endpoints will appear on the screen:
-   - ![Alt text](image.png)
+5. Click on any of the three endpoints that appear on the screen to see the data:
+   ![Alt text](image.png)
 
-### **/books** ###:
+## REST API Usage
 
-Returns all books in database in JSON format
+### Endpoint and Data Models Overview
 
-### **/sellers** ###:
+The REST API has three end points:
 
-Returns a list of all sellers that had a useful site in Hampton Roads, and their locations
+1. **sellers/**
+   Returns all the **sellers** in the database. Each **seller object** is in the form:
+   {
+   StoreName: (str) Name of the vendor,
+   StoreSite: (url) Link to the vendor's website,
+   locations: (list) List of **addres objects**
+   }
 
-## scripts/scrapers folder
+   - Locations contains a list of **addresess** for physical store locations. The **address object** is in the following form:
+     {
+     address_line: (str) The street name, number, and
+     apt or suite number if applicable, of a physical location,
+     city: (str) City of location
+     state: (str) Full name of state (Virginia, NOT VA)
+     phone_number: (str) Store's listed phone number
+     zip_code: (str) Location's zip code.
 
-### **the_strand.py**:
+   }
 
-File scrapes through inventory of The Strand bookstore searching for input title, and outputs a file containing a list of listings. Each listing is in the following format: {title, author, price, binding, link}
-**Updates:** Not being used in find.py, since The Strand is out of the Hampton Rds area :(
+2. **books/**
+   Returns all the **books** stored in database. Each **book object** is in the follwing form:
+   {
+   isbn: (str) ISBN value of book,
+   title: (str) Book title,
+   author: (str) Book author,
+   binding: (str) Two only possible values are
+   "Paperback"or "Hardcover"
+   availability: (list) List of **listing objects**
+   }
 
-    Usage: to use, provide a string title for the search
-    Example: python the_strand.py "Love in the Time of Cholera"
+3. **listings/**
+   Returns all the **listings** stored in the database. Each **listing object** is in the following form:
+   {
+   book_store: (str) Name of bookstore where book
+   is available,
+   price: (float) Dollar value of book from book_store
+   condition: (str) Two only possible values are "Used"
+   or "New"
+   link_url: (url) Link to the seller's book listing
+   }
 
-### **prince_bookstore.py**:
-
-Script scrapes through inventory of Prince Bookstore (Norfolk, VA), searches for input string, and returns details of books currently available in-store.
-
-    Usage: Called on by find.py
-
-### **second_and_charles.py**:
-
-Script scrapes through inventory of 2nd and Charles website, searches for input string, and returns details of books available in-store.
-
-    Usage: Called on by find.py
-
-**Considerations:** 2nd and Charles website does not specify which of the store's location each listing is available at.
-
-### **find.py**:
-
-Consolidation of all scraper scripts.
-
-    Usage: python3 find.py "input"
-    *where input is a book title, author, isbn, or keyword
-
-**Details:** find.py calls on each one of the scraper scripts sending the 'input' string as an argument.
-
-**Output:** Script will add a file to the search_outputs folder with the name 'input_search_output.txt', where 'input' is the input string used in the search.
-
-    Output file will be in the form "[{listing},{listing},{listing}...]
-    where each listing is an object in the form:
-        {
-         binding: "Hardcover" or "Paperback",
-         title: title of book,
-         author: name of the author,
-         price: price, in $ amount,
-         isbn: isbn of book,
-         url: url of book details with buying options,
-         store: store where the listing came from
-         condition: condition listed on the seller's website
-         }
+## Data Requests and Filtering
 
 ### Hampton Roads Bookshops:
 
