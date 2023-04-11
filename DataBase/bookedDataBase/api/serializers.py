@@ -1,3 +1,5 @@
+
+
 from rest_framework import serializers
 from seller.models import bookSellerSite
 from seller.models import Address
@@ -20,6 +22,7 @@ class SellerSerializer(serializers.ModelSerializer):
         fields = ('StoreName', 'StoreSite', 'locations')
 
 
+<<<<<<< HEAD
 class ListingsSerializer(serializers.ListSerializer):
     def to_representation(self, instance):
         # OMG please rewrite this in the near future, lest the Gods of CompSci seek revenge
@@ -72,3 +75,17 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = ('isbn', 'title', 'author', 'binding', 'availability')
+=======
+class ListingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Listing
+        fields = ('book_store', 'link_url', 'price', 'isbn')
+
+
+class BookSerializer(serializers.ModelSerializer):
+    available_at = ListingsSerializer(many=True)
+
+    class Meta:
+        model = Book
+        fields = ('isbn', 'title', 'author', 'binding', 'available_at')
+>>>>>>> main
