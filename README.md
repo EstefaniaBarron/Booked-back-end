@@ -77,18 +77,24 @@ The REST API has three end points:
 
         StoreSite: (url) Link to the vendor's website,
 
-        locations: (list) List of **address objects**,
+        locations: (list) List of address objects,
 
     }
 
     - Locations contains a list of **addresess** for physical store locations. The **address object** is in the following form:
-      {
-      address_line: (str) The street name, number, and
-      apt or suite number if applicable, of a physical location,
-      city: (str) City of location
-      state: (str) Full name of state (Virginia, NOT VA)
-      phone_number: (str) Store's listed phone number
-      zip_code: (str) Location's zip code.
+
+    {
+
+        address_line: (str) The street name, number, and
+                        apt or suite number if applicable, of a physical location,
+
+        city: (str) City of location,
+
+        state: (str) Full name of state (Virginia, NOT VA),
+
+        phone_number: (str) Store's listed phone number,
+
+        zip_code: (str) Location's zip code.
 
     }
 
@@ -116,12 +122,17 @@ The REST API has three end points:
     Returns all the **listings** stored in the database. Each **listing object** is in the following form:
 
     {
-    book_store: (str) Name of bookstore where book
-    is available,
-    price: (float) Dollar value of book from book_store
-    condition: (str) Two only possible values are "Used"
-    or "New"
-    link_url: (url) Link to the seller's book listing
+
+        book_store: (str) Name of bookstore where book
+                    is available,
+
+        price: (float) Dollar value of book from book_store
+
+        condition: (str) Two only possible values are "Used"
+                    or "New"
+
+        link_url: (url) Link to the seller's book listing
+
     }
 
 ## Data Requests and Filtering
