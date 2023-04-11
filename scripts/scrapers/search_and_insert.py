@@ -2,15 +2,15 @@
 from prince_bookstore import scrape_prince_books
 from second_and_charles import scrape_2nd_and_charles
 
-import os
+#import os
 
-import json
+#import json
 import sys
 
 
-def find(book):
+def run(book):
     scrape_prince_books(book, True)
-    #scrape_2nd_and_charles(book, True)
+    scrape_2nd_and_charles(book, True)
 
 
-find(sys.argv[1])
+run(sys.argv[1])

@@ -10,7 +10,8 @@ The contents of this README will be focused on:
 
 ## Project Installation
 
-_Assuming this repository has been successfully cloned_
+_Assuming this repository has been successfully cloned,_
+
 To run the contents of this repository:
 
 - Install all dependencies
@@ -28,9 +29,36 @@ To run the contents of this repository:
     conda create --name <env> --file conda_requirements.txt
     ```
 
-## Rest API
+## Usage of Scraping Functionality
 
-There are currently two end points in the Rest API:
+To use the webpage scraper:
+
+1. Navigate to DataBase/bookedDataBase/ directory
+2. In this directory, run the following command:
+   - `python manage.py runscript scrape_insert --script-args "your_search_string"`
+     **your_search_string**: String Parameter. The search criteria for the web scraping. It can be a book title, author, isbn, etc.
+3. Running the above command will automatically insert items into the database if it yielded books not already there.
+   - Example:
+     If the database does not contain any books by Toni Morrison, the command `python3 manage.py runscript scrape_insert --script-args "Toni Morrison"` will scrape websites using the search string "Toni Morrison", check for existence of each listing in the database, insert all new books found.
+
+**Considerations:**
+
+- The scraper only scrapes websites for the following two vendors:
+  - [Prince Books](https://www.prince-books.com/)
+  - [Second and Charles](https://www.2ndandcharles.com/)
+- The library used to run the scraper (Selenium) tends to take a lot of processing power. It _sometimes_ crashes Google Chrome web browser.
+- All results of running the script are added to the database, not outputed anywhere.
+
+## Accessing of Database
+
+To access and visualize database contents:
+
+1. Navigate to DataBase/bookedDataBase/ directory
+2. Run the following command: `python manage.py runserver`
+3. Open web browser of choice (the right choice is always Crome...)
+4. On the browser, go to localhost: **http://127.0.0.1:8000/**
+5. Click on any of the endpoints to see data:
+   ![Alt text](../../../Desktop/Screen%20Shot%202023-04-11%20at%201.32.03%20PM.png)
 
 ### **/books** ###:
 

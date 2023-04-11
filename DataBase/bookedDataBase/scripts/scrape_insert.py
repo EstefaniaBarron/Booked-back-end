@@ -11,7 +11,7 @@ So far the supported sellers are: Second and Charles, Prince Books
 Note that the runscripts library must be installed and configured in settings.py
 
 This script can be be called from the root directory as:
-python manage.py runscript --script-args "search_term"
+python manage.py runscript scrape_insert --script-args "search_term"
 
 This script contains the following modules:
     * run - Calls on the scraping functions of each of the supported sellers

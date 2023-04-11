@@ -52,8 +52,8 @@ def scrape_prince_books(book, insert_in_db=False):
             av = "N/A"
         if av == ' On Our Shelves Now':
             data.append(get_details(listing))
-    if(insert_in_db):
-        insert_data(data)
+    # if(insert_in_db):
+        # insert_data(data)
 
     return data
 
