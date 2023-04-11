@@ -1,6 +1,32 @@
 # Booked-back-end
 
-Back-end for Booked prototype. Team Gold, CS 411W
+Back-end for Booked prototype. Team Gold, CS 411W.
+The contents of this README will be focused on:
+
+- Project installation
+- Usage of scraping functionality
+- Accessing of database
+- REST API usage
+
+## Project Installation
+
+_Assuming this repository has been successfully cloned_
+To run the contents of this repository:
+
+- Install all dependencies
+  - Inside the main directory, navigate to **DataBase/bookedDataBase**:
+    - `cd DataBase/bookedDataBase`
+  - In this directory, there are two requirements files. One is for pip environments, and one for conda. Both _should_ work.
+    - To install pip environment:
+    ```
+    python3 -m venv env
+    source env/bin/activate
+    pip install -r pip_requirements.txt
+    ```
+    - To install conda environment:
+    ```
+    conda create --name <env> --file conda_requirements.txt
+    ```
 
 ## Rest API
 
@@ -89,6 +115,9 @@ Book Exchange: Inventory not available online
 Eleanor's Norfolk: Inventory not available online
 
 # Populate DJANGO ORM Database commands:
+
 use the automation script, automationFill.py path: .../Booked-back-end/DataBase/bookedDataBase/automationFill.py
+
 # Server update
-after the automation script runs,run python manage.py makemigrations to update the database 
+
+after the automation script runs,run python manage.py makemigrations to update the database
