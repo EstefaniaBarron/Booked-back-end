@@ -58,7 +58,7 @@ To access and visualize database contents:
 3. Open web browser of choice (the right choice is always Crome...)
 4. On the browser, go to localhost: **http://127.0.0.1:8000/**
 5. Three endpoints will appear on the screen:
-   -
+   - ![Alt text](image.png)
 
 ### **/books** ###:
 
