@@ -57,8 +57,8 @@ To access and visualize database contents:
 2. Run the following command: `python manage.py runserver`
 3. Open web browser of choice (the right choice is always Crome...)
 4. On the browser, go to localhost: **http://127.0.0.1:8000/**
-5. Click on any of the endpoints to see data:
-   ![Alt text](../../../Desktop/Screen%20Shot%202023-04-11%20at%201.32.03%20PM.png)
+5. Three endpoints will appear on the screen:
+   -
 
 ### **/books** ###:
 
