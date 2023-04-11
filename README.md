@@ -138,29 +138,26 @@ The REST API has three end points:
 ## Data Requests and Filtering
 
 **NOTE:** Only GET opperations are currently supported
+
 **NOTE:** **_Filtering is currently only available on Books data_**
+
 The **Book** model is configured to be able to return all **Listings** associated with it, and to allow users to filter on **Listing** attributes as well.
 
 To filter the database, send all parameters through the url in a request.
 The following is a list of **allowed** parameter keys:
 
-- **title**
-  String value
-- **author**  
-   String value
-- **isbn**
-  String value
-- **binding**
-  Only values accepted are "Hardcover" OR "Paperback"
-- **condition**
-  Only values accepted are "Used" or "New"
-- **price_max**
-  Float with two decimal places (25.00, instead of 25)
-- **price_min**
-  Float with two decimal places (25.00, instead of 25)
+- **title** : String value
+- **author** : String value
+- **isbn** : String value
+- **binding** : Only values accepted are "Hardcover" OR "Paperback"
+- **condition** : Only values accepted are "Used" or "New"
+- **price_max** : Float with two decimal places (25.00, instead of 25)
+- **price_min** : Float with two decimal places (25.00, instead of 25)
 
 **NOTE:** Order of parameters in request does not matter.
+
 **NOTE:** While all these parameters are supported, they are **_NOT REQUIRED_**. None of the parameters have to be specified or given a value.
+
 This means that the following query:
 
     GET http://127.0.0.1:8000/books/?author&title&isbn&binding=Hardcover&condition=&price_max=25.00&price_min
