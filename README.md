@@ -68,55 +68,61 @@ To access and visualize database contents:
 
 The REST API has three end points:
 
-1. **sellers/**
-   Returns all the **sellers** in the database. Each **seller object** is in the form:
-   {
-   StoreName: (str) Name of the vendor,
-   StoreSite: (url) Link to the vendor's website,
-   locations: (list) List of **addres objects**
-   }
+1.  **sellers/**
+    Returns all the **sellers** in the database. Each **seller object** is in the form:
 
-   - Locations contains a list of **addresess** for physical store locations. The **address object** is in the following form:
-     {
-     address_line: (str) The street name, number, and
-     apt or suite number if applicable, of a physical location,
-     city: (str) City of location
-     state: (str) Full name of state (Virginia, NOT VA)
-     phone_number: (str) Store's listed phone number
-     zip_code: (str) Location's zip code.
+    {
 
-   }
+        StoreName: (str) Name of the vendor,
 
-2. **books/**
+        StoreSite: (url) Link to the vendor's website,
 
-   Returns all the **books** stored in database. Each **book object** is in the follwing form:
+        locations: (list) List of **address objects**,
 
-   {
-   isbn: (str) ISBN value of book,
+    }
 
-   title: (str) Book title,
+    - Locations contains a list of **addresess** for physical store locations. The **address object** is in the following form:
+      {
+      address_line: (str) The street name, number, and
+      apt or suite number if applicable, of a physical location,
+      city: (str) City of location
+      state: (str) Full name of state (Virginia, NOT VA)
+      phone_number: (str) Store's listed phone number
+      zip_code: (str) Location's zip code.
 
-   author: (str) Book author,
+    }
 
-   binding: (str) Two only possible values are
-   "Paperback"or "Hardcover"
+2.  **books/**
 
-   availability: (list) List of **listing objects**
+    Returns all the **books** stored in database. Each **book object** is in the follwing form:
 
-   }
+    {
 
-3. **listings/**
+         isbn: (str) ISBN value of book,
 
-   Returns all the **listings** stored in the database. Each **listing object** is in the following form:
+         title: (str) Book title,
 
-   {
-   book_store: (str) Name of bookstore where book
-   is available,
-   price: (float) Dollar value of book from book_store
-   condition: (str) Two only possible values are "Used"
-   or "New"
-   link_url: (url) Link to the seller's book listing
-   }
+         author: (str) Book author,
+
+         binding: (str) Two only possible values are
+                 "Paperback"or "Hardcover"
+
+         availability: (list) List of **listing objects**
+
+    }
+
+3.  **listings/**
+
+    Returns all the **listings** stored in the database. Each **listing object** is in the following form:
+
+    {
+    book_store: (str) Name of bookstore where book
+    is available,
+    price: (float) Dollar value of book from book_store
+    condition: (str) Two only possible values are "Used"
+    or "New"
+    link_url: (url) Link to the seller's book listing
+    }
 
 ## Data Requests and Filtering
 
