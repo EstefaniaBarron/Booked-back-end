@@ -88,18 +88,27 @@ The REST API has three end points:
    }
 
 2. **books/**
+
    Returns all the **books** stored in database. Each **book object** is in the follwing form:
+
    {
    isbn: (str) ISBN value of book,
+
    title: (str) Book title,
+
    author: (str) Book author,
+
    binding: (str) Two only possible values are
    "Paperback"or "Hardcover"
+
    availability: (list) List of **listing objects**
+
    }
 
 3. **listings/**
+
    Returns all the **listings** stored in the database. Each **listing object** is in the following form:
+
    {
    book_store: (str) Name of bookstore where book
    is available,
