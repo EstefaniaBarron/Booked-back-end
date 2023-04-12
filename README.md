@@ -19,16 +19,10 @@ To run the contents of this repository:
 - Install all dependencies
   - Inside the main directory, navigate to **DataBase/bookedDataBase**:
     - `cd DataBase/bookedDataBase`
-  - In this directory, there are two requirements files. One is for pip environments, and one for conda. Both _should_ work.
-    - To install pip environment:
+  - In this directory, there is a requirements.txt document compatible with pip
+    - To install dependencies using pip:
     ```
-    python3 -m venv env
-    source env/bin/activate
-    pip install -r pip_requirements.txt
-    ```
-    - To install conda environment:
-    ```
-    conda create --name <env> --file conda_requirements.txt
+    pip install -r requirements.txt
     ```
 
 ## Usage of Scraping Functionality
