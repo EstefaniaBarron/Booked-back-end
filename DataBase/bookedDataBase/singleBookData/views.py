@@ -8,6 +8,7 @@ from api.serializers import ListingsSerializer
 from api.serializers import ListingsListSerializer
 from .models import Listing
 from .models import Book
+from api.serializers import BookDistanceSerializer
 
 
 # Filters through Books model.
@@ -52,6 +53,22 @@ class ListingView(viewsets.ModelViewSet):
 
 
 class ListingListView(viewsets.ModelViewSet):
+
     queryset = Listing.objects.all()
     serializer_class = ListingsListSerializer
     filterset_class = ListingsFilter
+
+
+class BooksDistanceView(viewsets.ModelViewSet):
+    queryset = Book.objects.all()
+
+    serializer_class = BookDistanceSerializer
+
+
+'''
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update(
+            {'zip_code': self.request.query_params.get('zip_code', False)})
+        return context
+'''
