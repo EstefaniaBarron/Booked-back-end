@@ -63,12 +63,4 @@ class BooksDistanceView(viewsets.ModelViewSet):
     queryset = Book.objects.all()
 
     serializer_class = BookDistanceSerializer
-
-
-'''
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context.update(
-            {'zip_code': self.request.query_params.get('zip_code', False)})
-        return context
-'''
+    filterset_class = BooksFilter

@@ -5,25 +5,28 @@ from seller.models import bookSellerSite
 from seller.models import Address
 from singleBookData.models import Book
 from singleBookData.models import Listing
-from scripts.calculate_distance import run as calculate_distance
+import pgeocode
 
 
 class AddressDistanceSerializer(serializers.ModelSerializer):
 
-    #    distance = serializers.SerializerMethodField()
+    distance = serializers.SerializerMethodField('get_distance')
 
-    #    def get_query_zip_code(self):
-    #        return self.context['request'].query_params.get('zip_code', None)
+    def get_query_zip_code(self):
+        return self.context['request'].GET.get('zip_code')
 
-    #    def get_distance(self, obj):
-    #        if self.get_query_zip_code:
-    #            distance = calculate_distance(
-    #                self.get_query_zip_code, 98109)
-    #            return distance
+    def get_distance(self, obj):
+        if self.get_query_zip_code():
+            request_zip = self.get_query_zip_code()
+            dist = pgeocode.GeoDistance('us')
+            miles = dist.query_postal_code(request_zip, obj.zip_code)*0.621371
+
+            return miles
 
     class Meta:
         model = Address
-        fields = ('address_lines', 'city', 'state', 'phone_number', 'zip_code')
+        fields = ('address_lines', 'city', 'state',
+                  'phone_number', 'zip_code', 'distance')
 
 
 class SellerDistanceSerializer(serializers.ModelSerializer):
@@ -60,7 +63,6 @@ class ListingsSerializer(serializers.ListSerializer):
         if req_condition and req_max_price and req_min_price:
             instance = instance.filter(
                 condition=req_condition, price__lte=req_max_price, price__gte=req_min_price)
-            # return super(ListingsSerializer, self).to_representation(instance)
         if req_condition and req_min_price and not req_max_price:
             instance = instance.filter(
                 condition=req_condition, price__gte=req_min_price)
@@ -89,25 +91,6 @@ class ListingsSerializer(serializers.ListSerializer):
 class ListingsListSerializer(serializers.ModelSerializer):
     # Add name of store in view, as opposed to id
     book_store = serializers.CharField(source='book_store.StoreName')
-    #request_zip = serializers.SerializerMethodField()
-    # listing_zip_code = serializers.CharField(
-    # source='book_store.locations.zip_code')
-    #distance = calculate_distance(request_zip, listing_zip_code)
-    #zip_code = serializers.SerializerMethodField()
-    # def get_request_zip(self, obj):
-
-    # Trying to get calculate distance from given zip code
-    # return self.context['request'].GET.get('zip_code')
-    # def get_zip_code(self, obj):
-    # return self.context['request'].query_params.get('zip_code', None)
-    #zip_code = self.context.get('zip_code', False)
-    #distance = serializers.SerializerMethodField()
-
-    # def get_distance(self, obj):
-    #    zip_code = self.context.get('zip_code', False)
-    #    if zip_code:
-    #        return "HERE"
-    #    return None
 
     class Meta:
         model = Listing
@@ -116,27 +99,12 @@ class ListingsListSerializer(serializers.ModelSerializer):
                   'link_url')
 
 
-'''
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        zip_code = self.context.get('zip_code', False)
-        if zip_code:
-            book_store = serializers.CharField(source='book_store.StoreName')
-            listing_zip_code = serializers.CharField
-
-            class Meta:
-                model = Listing
-                list_serializer_class = ListingsSerializer
-                fields = ('book_store', 'price', 'condition',
-                          'link_url', 'zip_code')
-'''
-
-
 class ListingsDistanceSerializer(serializers.ModelSerializer):
     book_store = SellerDistanceSerializer(read_only=True)
 
     class Meta:
         model = Listing
+        list_serializer_class = ListingsSerializer
         fields = ('book_store', 'price', 'condition',
                   'link_url')
 
