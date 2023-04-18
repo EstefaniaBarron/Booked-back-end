@@ -23,17 +23,13 @@ The file contains the following functions:
 
 """
 
-# NOTE: Configuration taken from tutorial, might need to change later
-# start by defining the options
+# NOTE: Selenium configuration taken from tutorial, might need to change later
+
 options = webdriver.ChromeOptions()
-options.headless = True  # it's more scalable to work in headless mode
-# normally, selenium waits for all resources to download
-# we don't need it as the page also populated with the running javascript code.
+options.headless = True
 options.page_load_strategy = 'none'
-# this returns the path web driver downloaded
 chrome_path = ChromeDriverManager().install()
 chrome_service = Service(chrome_path)
-# pass the defined options and service objects to initialize the web driver
 driver = Chrome(options=options, service=chrome_service)
 driver.implicitly_wait(5)
 
@@ -62,6 +58,7 @@ def scrape_prince_books(book):
     driver.get(url)
     time.sleep(10)
     select = Select(driver.find_element(By.NAME, "fsort"))
+    # Filter results for books currently in stock
     select.select_by_visible_text("In Stock")
     button = driver.find_element(By.ID, "edit-fsort-apply")
     button.submit()
@@ -89,8 +86,8 @@ def get_details(listing):
             listing (selenium element): The individual listing element containing information about a single search result
 
         Returns:
-            all_details (obj): An object containg the attributes and values of a single search resu;t
-                                Object is in the form:
+            all_details (dict): A dictionary containg the attributes and values of a single search resu;t
+                                Dictionary is in the form:
                                 {
                                     binding,
                                     title,
@@ -128,6 +125,20 @@ def get_details(listing):
 
 
 def extract_details(whole_string):
+    """Extracts the binding type from the whole string
+        Args:
+            whole_string (str): The entire string scraped from Prince Books which comes in the form "Title (Binding)"
+
+        Returns:
+            obj (obj): An object containg the title and binding attributes (can only be "Paperback" or "Hardcover")
+                                Object is in the form:
+                                {
+                                    binding,
+                                    title
+                                }
+
+
+    """
     obj = {}
     idx = -1
     if "(Paperback)" in whole_string:

@@ -11,11 +11,16 @@ from .models import Book
 from api.serializers import BookDistanceSerializer
 
 
-# Filters through Books model.
-# Overwriting filterset class behavior to return books that contain title and author string vs exact match
-
-
 class BooksFilter(filters.FilterSet):
+
+    """Filter creates filter fields for the following Book attributes:
+        titile - Filter against Book.title (Contains, case insensitive)
+        author - Filter against Book.author (Contains, case insensitive)
+        condition - Filter against Book.availability.condition (Exact -can only be Used or New)
+        price_max - Filter against Book.availability.price (Less than or equal to)
+        price_min - Filter aganst Book.availability.price (Greater than or equal to)
+    """
+
     title = filters.CharFilter(lookup_expr='icontains')
     author = filters.CharFilter(lookup_expr='icontains')
     condition = filters.CharFilter(
@@ -32,6 +37,10 @@ class BooksFilter(filters.FilterSet):
 
 
 class ListingsFilter(filters.FilterSet):
+    """Filter for the following Listing attributes:
+        condition - Filter against Listing.condition (Exact -can only be Used or New)
+        price - Filter against Listing.price (Greater than or equal to, Less than or equal to)
+    """
     class Meta:
         model = Listing
         fields = {
@@ -41,6 +50,9 @@ class ListingsFilter(filters.FilterSet):
 
 
 class BooksView(viewsets.ModelViewSet):
+    """ View used in books/ endpoint
+        Uses BooksFilter and BooksSerializer
+    """
     queryset = Book.objects.all()
 
     serializer_class = BookSerializer
@@ -48,11 +60,16 @@ class BooksView(viewsets.ModelViewSet):
 
 
 class ListingView(viewsets.ModelViewSet):
+    """ Uses ListingsSerializer as Serializer
+    """
     queryset = Listing.objects.all()
     serializer_class = ListingsSerializer
 
 
 class ListingListView(viewsets.ModelViewSet):
+    """ View used in Listings serializer
+        Uses ListingListSerializer and ListingsFilter
+    """
 
     queryset = Listing.objects.all()
     serializer_class = ListingsListSerializer
@@ -60,6 +77,9 @@ class ListingListView(viewsets.ModelViewSet):
 
 
 class BooksDistanceView(viewsets.ModelViewSet):
+    """ View used in near-me/ end point
+        Uses BooksDistanceSerializer and BooksFilter
+    """
     queryset = Book.objects.all()
 
     serializer_class = BookDistanceSerializer
