@@ -9,6 +9,7 @@ The contents of this README will be focused on:
 - REST API
   - Endpoints and Model Overview
   - Data Requests and Filtering
+- Hampton Roads book shops
 
 ## Project Installation
 
@@ -60,7 +61,7 @@ To access and visualize database contents:
 
 ### Endpoint and Data Models Overview
 
-The REST API has three end points:
+The REST API has four end points:
 
 1.  **sellers/**
     Returns all the **sellers** in the database. Each **seller object** is in the form:
@@ -129,11 +130,35 @@ The REST API has three end points:
 
     }
 
+4.  **near-me/**
+
+    By default, it returns all the **Book** objects in database.
+    The main difference between this endpoint and the **books/** end point is that each **Listing** object also returns all list of all **Address** objects associated with it, including **Address** attribute **distance** which represents the distance between the **zip_code** sent in request and the **Address** object zip code attribute.
+
+    {
+
+         isbn: (str) ISBN value of book,
+
+         title: (str) Book title,
+
+         author: (str) Book author,
+
+         binding: (str) Two only possible values are
+                 "Paperback"or "Hardcover"
+
+         availability: (list) List of **listing objects**
+
+            book_seller: (obj) **Seller** object associated to **Listing**
+
+                locations: (list) List of **Address* objects associated to specific **Seller**
+
+    }
+
 ## Data Requests and Filtering
 
 **NOTE:** Only GET opperations are currently supported
 
-**NOTE:** **_Filtering is currently only available on Books data_**
+### Filtering book/ enpoint
 
 The **Book** model is configured to be able to return all **Listings** associated with it, and to allow users to filter on **Listing** attributes as well.
 
@@ -160,36 +185,54 @@ will return all **Book** objects (and their corresponding **Listing**s) that are
 
     GET http://127.0.0.1:8000/books/?binding=Hardcover&price_max=25.00
 
-### Hampton Roads Bookshops:
+### Filtering near-me/ endpoint
 
-Dog Eared Books: Inventory not available online
+In addition to accepting the same parameters as the **books/** endpoint, this endpoint accepts a **zip_code** parameter which is used to calculate the distance from each **Seller** **Address** to the sent **request_api**
 
-Barnes and Noble
+To filter the database, send all parameters through the url in a request.
+The following is a list of **allowed** parameter keys:
 
-The Way We Were: No Website available
+- **title** : String value
+- **author** : String value
+- **isbn** : String value
+- **binding** : Only values accepted are "Hardcover" OR "Paperback"
+- **condition** : Only values accepted are "Used" or "New"
+- **price_max** : Float with two decimal places (25.00, instead of 25)
+- **price_min** : Float with two decimal places (25.00, instead of 25)
+- **zip_code** : Integer value
 
-Bender's Books and Cards: No Website available
+**NOTE:** Order of parameters in request does not matter.
 
-Prince Books
+**NOTE:** While all these parameters are supported, they are **_NOT REQUIRED_**. None of the parameters have to be specified or given a value.
 
-Paperbacks Ink: Inventory not available online
+This means that the following query:
 
-Book Owl: No Website available
+    GET http://127.0.0.1:8000/books/?author&title&isbn&binding=Hardcover&condition=&price_max=25.00&price_min&zip_code=23508
 
-Jeannie's Used Books: No Website available
+will return all **Book** objects (and their corresponding **Listing**s) that are Hardcover and have a price less than or equal to $25, including a distance field. The above query is equivalent to:
 
-afk Books and Records: No Website available
+    GET http://127.0.0.1:8000/books/?binding=Hardcover&price_max=25.00&zip_code=23508
 
-2nd and Charles
+### Hampton Roads book shops:
 
-Book Exchange: Inventory not available online
+1.  **Dog Eared Books** : Inventory not available online
 
-Eleanor's Norfolk: Inventory not available online
+2.  **The Way We Were** : No Website available
 
-# Populate DJANGO ORM Database commands:
+3.  **Bender's Books and Cards** : No Website available
 
-use the automation script, automationFill.py path: .../Booked-back-end/DataBase/bookedDataBase/automationFill.py
+4.  **Prince Books**
 
-# Server update
+5.  **Paperbacks Ink** : Inventory not available online
 
-after the automation script runs,run python manage.py makemigrations to update the database
+6.  **Book Owl**: No Website available
+
+7.  **Jeannie's Used Books** : No Website available
+
+8.  **afk Books and Records** : No Website available
+
+9.  **2nd and Charles**
+
+10. **Book Exchange** : Inventory not available online
+
+11. **Eleanor's Norfolk** : Inventory not available online
